@@ -1,2 +1,3 @@
-# wechatlook
-A koa crawler for wechat look
+#wechatlook
+
+A server that crawls wechat looks
