@@ -4,6 +4,7 @@ const koa = require('koa');
 const logger = require('koa-logger');
 const onerror = require('koa-onerror');
 const routes = require('./routes');
+const crawler = require('./crawler');
 
 const app = koa();
 
@@ -11,7 +12,9 @@ const app = koa();
 app.use(logger());
 onerror(app);
 routes(app);
-
 // listen
 app.listen(3000);
 console.log('listening on port 3000');
+
+crawler.crawl();
+setInterval(crawler.crawl, 12 * 60 * 60 * 1000);
