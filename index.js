@@ -4,7 +4,7 @@ const koa = require('koa');
 const logger = require('koa-logger');
 const onerror = require('koa-onerror');
 const routes = require('./routes');
-const crawler = require('./crawler');
+const crawler = require('./crawler_car');
 require('./storage/redis');
 
 const app = koa();
