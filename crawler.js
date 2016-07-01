@@ -8,6 +8,7 @@ const Crawler = require('simplecrawler');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
+const redis = require('./storage/redis');
 
 const TEMP_HOT_PATH = 'http://www.wxcha.com/biaoqing/hot_';
 const TEMP_RECENT_PATH = 'http://www.wxcha.com/biaoqing/update_';

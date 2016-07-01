@@ -16,17 +16,17 @@
     "koa-onerror": "~1.3.1",
     "koa-route": "^2.4.2",
     "koa-static": "^1.5.2",
+    "redis": "~2.6.2",
     "simplecrawler": "~0.7.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "request": "~2.72.0"
+  },
   "pre-commit": [
     "lint"
   ],
   "scripts": {
     "start": "npm run dev",
-    "dev": "node index.js",
-    "test": "antd test",
-    "lint": "eslint --ext .js,.jsx src",
-    "build": "webpack"
+    "dev": "sh ./localStart.sh"
   }
 }

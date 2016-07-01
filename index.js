@@ -5,6 +5,7 @@ const logger = require('koa-logger');
 const onerror = require('koa-onerror');
 const routes = require('./routes');
 const crawler = require('./crawler');
+require('./storage/redis');
 
 const app = koa();
 
