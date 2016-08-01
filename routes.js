@@ -13,7 +13,9 @@ const route = require('koa-route');
 const looks = require('./controllers/api/looks');
 
 module.exports = function (app) {
-  app.use(route.get('/api/allLooks', looks.allLooks));
+  app.use(route.get('/api/hotLooks', looks.hotLooks));
+  app.use(route.get('/api/recentLooks', looks.recentLooks));
+  app.use(route.get('/api/looks', looks.queryLooks));
 };
 
 

@@ -8,17 +8,19 @@ const Crawler = require('simplecrawler');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
-const redis = require('./storage/redis');
+const storage = require('./storage/mongo');
+const scope = storage.lookTag;
+const util = require('./util');
 
 const TEMP_HOT_PATH = 'http://www.wxcha.com/biaoqing/hot_';
 const TEMP_RECENT_PATH = 'http://www.wxcha.com/biaoqing/update_';
 
 function crawl() {
-  crawlWXCHA(TEMP_HOT_PATH, 5, path.join(__dirname, '/test/fixtures/wx_hot_mocks.json'));
-  crawlWXCHA(TEMP_RECENT_PATH, 5, path.join(__dirname, '/test/fixtures/wx_recent_mocks.json'));
+  crawlWXCHA(TEMP_HOT_PATH, 20, scope.hot);
+  crawlWXCHA(TEMP_RECENT_PATH, 20, scope.recent);
 }
 
-function crawlWXCHA(base, range, outputs) {
+function crawlWXCHA(base, range, scope) {
   let WXCHA_CRAWLEDURLS = new Set();
 
   function crawledURLS(base, range) {
@@ -31,7 +33,7 @@ function crawlWXCHA(base, range, outputs) {
     return arr.map(p => base + p + '.html');
   }
 
-  function condition(parsedURL, queueItem) {
+  function condition(parsedURL) {
     return parsedURL.path.match(/^\/biaoqing\/\d+.html$/i)
   }
 
@@ -53,7 +55,7 @@ function crawlWXCHA(base, range, outputs) {
       });
 
       crawler.on('complete', () => resolve(result));
-
+      crawler.on('error', (err) => reject(err));
       crawler.addFetchCondition(condition);
       crawler.start();
     })
@@ -80,23 +82,24 @@ function crawlWXCHA(base, range, outputs) {
         title: title,
         desc: descText,
         pics: pics,
-        fromURL: url
+        fromURL: url,
+        scope: scope,
+        createAt: util.now(),
       })
     }
 
     fn && fn(res);
   }
 
-  const hotURLs = crawledURLS(base, range);
-
-  const allCrawlHots = hotURLs.map(p => crawler(p, condition));
+  const allCrawlHots = crawledURLS(base, range).map(p => crawler(p, condition));
   Promise.all(allCrawlHots)
-    .then(res => {
-      console.log('crawl done');
-      const result = res.reduce((a, b) => a.concat(b));
-      fs.writeFileSync(outputs, JSON.stringify(result));
+    .then(res => res.reduce((a, b) => a.concat(b), []))
+    .then(flatRes => {
+      if (flatRes.length > 0) return storage.looks.insert(flatRes);
+      return [];
     })
-    .catch(err => console.log('load hot failed', err))
+    .then(insertRes => console.log('insert Res is', insertRes))
+    .catch(err => console.log('crawler failed', err))
 }
 
 module.exports = {
