@@ -1,6 +1,6 @@
-const devConfig = require('./config.local');
+const devConfig = require('./config.local')
 
-let config = Object.assign({}, devConfig);
+let config = Object.assign({}, devConfig)
 
 // TODO: env judge
-module.exports = config;
+module.exports = config

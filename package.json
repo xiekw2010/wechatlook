@@ -29,7 +29,7 @@
     "lint"
   ],
   "scripts": {
-    "start": "npm run dev",
+    "start": "node index.js",
     "dev": "sh ./localStart.sh"
   }
 }

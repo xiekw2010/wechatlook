@@ -1,21 +1,22 @@
 /**
  * Created by xiekaiwei on 16/6/24.
  */
-"use strict";
+"use strict"
 
-const monk = require('monk');
-const config = require('../config/config');
+const monk = require('monk')
+const config = require('../config/config')
 
-const url = config.mongo;
-const db = monk(url);
+const url = config.mongo
+console.log('mongo url is', url)
+const db = monk(url)
 
-const looks = db.get('looks');
+const looks = db.get('looks')
 const lookTag = {
   hot: 'HOT',
-  recent: 'RECENT',
+  recent: 'RECENT'
 }
 
 module.exports = {
   looks,
-  lookTag,
-};
+  lookTag
+}

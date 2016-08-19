@@ -1,4 +1,4 @@
-const url = 'localhost:27017/wechatlook'; // Connection URL
+const url = 'localhost:32772/db'; // Connection URL
 const db = require('monk')(url);
 
 const collection = db.get('test')
